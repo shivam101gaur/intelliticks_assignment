@@ -6,6 +6,7 @@ import properties from 'src/app/data/properties';
 import { MatDialog } from '@angular/material/dialog';
 import { AddPropertiesComponent } from '../add-properties/add-properties.component';
 import { SharedService } from 'src/app/services/shared.service';
+import { HttpService } from 'src/app/services/http.service';
 
 @Component({
   selector: 'app-list-properties',
@@ -21,15 +22,17 @@ import { SharedService } from 'src/app/services/shared.service';
 })
 export class ListPropertiesComponent implements OnInit {
 
-  constructor(public dialog: MatDialog, private shared: SharedService) { }
+  httpLoader = false
+  constructor(public dialog: MatDialog, private http: HttpService) { }
 
-  properties: Property[] = this.shared.properties;
+  properties: Property[] = []
   dataSource = new MatTableDataSource<Property>(this.properties)
 
   tableColumns = ['index', 'name', 'description', 'size', 'action'];
 
 
   ngOnInit(): void {
+    this.getData()
   }
   /**
    * Open Dialog to add a property
@@ -37,7 +40,7 @@ export class ListPropertiesComponent implements OnInit {
   openAddPropertyDialog() {
     this.dialog.open(AddPropertiesComponent, { disableClose: true })
       .afterClosed().subscribe(saved => {
-        if (saved) { this.properties = this.shared.properties; this.dataSource.data = this.properties; }
+        if (saved) { this.getData() }
       });
   }
 
@@ -48,10 +51,38 @@ export class ListPropertiesComponent implements OnInit {
    */
   delete(property: Property, index: number) {
     if (confirm(`${property?.name} will be deleted !`)) {
-      this.shared.properties.splice(index, 1);
-      this.properties=this.shared.properties;
-      this.dataSource.data = this.properties;
+      this.httpLoader = true
+      this.http.deleteProperty(property.id).subscribe(res => {
+        if (res.deleted) {
+          // property deleted successfully
+          this.getData()
+        }
+        else {
+          this.httpLoader = false
+          // could not delete property
+          alert('could not delete ' + property?.name)
+        }
+      }, err => {
+        this.httpLoader = false
+        alert('could not delete ' + property?.name)
+      })
+
     }
+  }
+
+  /**
+   * fetches properties list from database
+   */
+  getData() {
+    this.httpLoader = true
+    this.http.getProperties().subscribe(res => {
+      this.httpLoader = false
+      this.properties = res.records.map(ele => { return { id: ele.id, ...ele.fields } });
+      this.dataSource.data = this.properties;
+    }, err => {
+      this.httpLoader=false
+      alert('Could not fetch data.')
+    })
   }
 
 }

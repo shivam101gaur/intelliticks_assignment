@@ -8,7 +8,6 @@ mat-form-field {
 }
 .header{
     display: flex;
-    justify-content: start;
 }
 .headericon{
     margin-left: auto;

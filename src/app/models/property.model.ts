@@ -3,4 +3,5 @@ export interface Property {
     description:string;
     size:number;
     sizeUnit:'sqrFt'|'sqrMtr';
+    id:string;
 }

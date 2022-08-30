@@ -8,7 +8,7 @@ import { AngularMaterialModule } from './angular-material/angular-material.modul
 import { ListPropertiesComponent } from './components/list-properties/list-properties.component';
 import { AddPropertiesComponent } from './components/add-properties/add-properties.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import {HttpClientModule} from '@angular/common/http'
 
 @NgModule({
   declarations: [
@@ -22,7 +22,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     AngularMaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

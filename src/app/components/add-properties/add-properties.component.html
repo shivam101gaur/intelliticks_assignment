@@ -9,26 +9,28 @@
         <p>
             <mat-form-field appearance="outline">
                 <mat-label>Name</mat-label>
-                <input formControlName="name" required matInput placeholder="name of property"/>
+                <input formControlName="name" required matInput placeholder="name of property" />
                 <mat-hint>Keep Property Name Unique</mat-hint>
             </mat-form-field>
         </p>
         <p>
             <mat-form-field appearance="outline">
                 <mat-label>Description</mat-label>
-                <textarea  formControlName="description" required matInput placeholder="Details about property"></textarea>
+                <textarea formControlName="description" required matInput
+                    placeholder="Details about property"></textarea>
                 <mat-hint>Describe property rate/ location / type</mat-hint>
             </mat-form-field>
         </p>
         <p>
-            <mat-form-field style="width:49%"  appearance="outline">
+            <mat-form-field style="width:49%" appearance="outline">
                 <mat-label>Size</mat-label>
-                <input formControlName="size" required type="number" min="0" max="10000" matInput placeholder="size of property">
+                <input formControlName="size" required type="number" min="0" max="10000" matInput
+                    placeholder="size of property">
             </mat-form-field>
 
             <mat-form-field style="width:49%" appearance="outline">
                 <mat-label>Size Unit</mat-label>
-                <mat-select formControlName="sizeUnit" required >
+                <mat-select formControlName="sizeUnit" required>
                     <mat-option *ngFor="let unit of sizeUnits" [value]="unit">
                         {{unit}}
                     </mat-option>
@@ -36,10 +38,12 @@
             </mat-form-field>
         </p>
 
-    </mat-dialog-content>   
+    </mat-dialog-content>
     <mat-dialog-actions align="end">
-        <button mat-button (click)="cancel()" type="button" color="warn" >Cancel</button>
-        <button mat-raised-button color="primary"  [disabled]="!form.valid" type="submit" >Save
+        <button mat-button (click)="cancel()" type="button" color="warn">Cancel</button>
+        <button mat-raised-button color="primary" [disabled]="!form.valid||httpLoader" type="submit">Save
             Property</button>
+
+        <mat-spinner *ngIf="httpLoader" style="margin: 0 1.5%;" diameter="25"></mat-spinner>
     </mat-dialog-actions>
 </form>

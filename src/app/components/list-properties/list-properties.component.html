@@ -1,11 +1,11 @@
 <div class="container">
     <div class="table-container ">
-        
-        
-                <button (click)="openAddPropertyDialog()" class="addbtn" color="primary" mat-raised-button>
-                    <mat-icon>add_business</mat-icon>
-                    ADD PROPERTY
-                </button>
+
+
+        <button (click)="openAddPropertyDialog()" class="addbtn" color="primary" mat-raised-button>
+            <mat-icon>add_business</mat-icon>
+            ADD PROPERTY
+        </button>
         <table class="mat-elevation-z8" mat-table [dataSource]="dataSource">
 
             <!--- Note that these columns can be defined in any order.
@@ -37,16 +37,21 @@
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef> Action </th>
                 <td mat-cell *matCellDef="let element;let i=index;">
-                    <button [matTooltip]="'Delete '+element.name" matTooltipPosition="left" matTooltipTouchGestures="on" color="warn" (click)="delete(element,i)" mat-icon-button>
+                    <button [matTooltip]="'Delete '+element.name" matTooltipPosition="left" matTooltipTouchGestures="on"
+                        color="warn" (click)="delete(element,i)" mat-icon-button>
                         <mat-icon>delete</mat-icon>
                     </button>
                 </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="tableColumns;sticky: true"></tr>
-            <tr  mat-row *matRowDef="let row; columns: tableColumns;"></tr>
-            
+            <tr mat-row *matRowDef="let row; columns: tableColumns;"></tr>
+
         </table>
-        <div *ngIf="!dataSource?.data?.length" class="emptytablemessage" ><button (click)="openAddPropertyDialog()"  mat-button color="warn" >Empty Catalogue. Click here to add New Property!</button></div>
+        <div *ngIf="!dataSource?.data?.length" class="emptytablemessage"><button (click)="openAddPropertyDialog()"
+                mat-button color="warn">Empty Catalogue. Click here to add New Property!</button></div>
+    </div>
+    <div *ngIf="httpLoader" class="backdrop">
+        <mat-spinner  diameter="200"></mat-spinner>
     </div>
 </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Property } from 'src/app/models/property.model';
+import { HttpService } from 'src/app/services/http.service';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
@@ -11,7 +12,9 @@ import { SharedService } from 'src/app/services/shared.service';
 })
 export class AddPropertiesComponent implements OnInit {
 
-  constructor(public dialogRef: MatDialogRef<AddPropertiesComponent>,private shared:SharedService) { }
+  httpLoader = false
+
+  constructor(public dialogRef: MatDialogRef<AddPropertiesComponent>, private http: HttpService) { }
   sizeUnits: Property['sizeUnit'][] = ['sqrFt', 'sqrMtr']
   form = new FormGroup(
     {
@@ -24,21 +27,28 @@ export class AddPropertiesComponent implements OnInit {
   ngOnInit(): void {
   }
   saveProperty() {
-    if(this.form.valid){
-      const newProperty:Property=this.form.value;
-      this.shared.properties.push(newProperty);
-      this.dialogRef.close(true)
+    if (this.form.valid) {
+      this.httpLoader =true
+      const newProperty: Property = this.form.value;
+      this.http.postProperty(newProperty).subscribe(res => {
+        // property added successfully to DB
+        this.httpLoader=false
+        this.dialogRef.close(true)
+      }, err => {
+        this.httpLoader=false
+        alert('Could not save property.\nTry again !!')
+      })
     }
-    else{
+    else {
       alert('Invalid form')
     }
   }
   cancel() {
-    if(this.form.dirty){
-      if(confirm('All your changes will be lost!\ndo you want to continue ?')){
+    if (this.form.dirty) {
+      if (confirm('All your changes will be lost!\ndo you want to continue ?')) {
         this.dialogRef.close()
       }
-      else{
+      else {
         return
       }
     }
